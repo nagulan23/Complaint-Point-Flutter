@@ -16,48 +16,28 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return new Container(
+      margin: EdgeInsets.fromLTRB(5, 10, 10, 10),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.23,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new Container(
-            width: MediaQuery.of(context).size.width * 0.05,
-            height: MediaQuery.of(context).size.height * 0.23,
+            //width: MediaQuery.of(context).size.width * 0.05,
+            width:5,
+            height: 200,
             decoration: new BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
               color: Colors.greenAccent[700],
             ),
           ),
-          new Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.23,
+          new Expanded(
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    new Container(
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: new RichText(
-                        text: TextSpan(
-                          text: title,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: MediaQuery.of(context).size.height * 0.03,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    new Container(
+                new Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         alignment: Alignment.centerLeft,
-                        width: MediaQuery.of(context).size.width * 0.24,
-                        height: MediaQuery.of(context).size.height * 0.07,
                         child: new Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -65,41 +45,22 @@ class _FeedState extends State<Feed> {
                               radius: MediaQuery.of(context).size.width * 0.05,
                               backgroundImage: NetworkImage("https://www.thescentedskunk.com/wp-content/uploads/2017/05/Profile-pic-circle-transparent-background-1-e1503671090517.png"),
                             ),
-                            new RichText(
-                              text: TextSpan(
-                                  text: name+"\n",
+                            new Text(
+                                  name,
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              0.015,
+                                      fontSize: MediaQuery.of(context).size.height * 0.017,
                                       fontWeight: FontWeight.w400),
-                                  children: <TextSpan>[
-                                    new TextSpan(
-                                      text: "Noida",
-                                      style: TextStyle(
-                                          color: Colors.indigo,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.010,
-                                          fontWeight: FontWeight.w400),
-                                    )
-                                  ]),
                             ),
                           ],
-                        )),
-                  ],
-                ),
+                        )
+                      ),
                 new Container(
                   width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.03,
+                  padding: EdgeInsets.fromLTRB(10, 2, 0, 5),
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Container(
-                        width: MediaQuery.of(context).size.width * 0.02,
-                      ),
                       new Icon(Icons.location_on,
                           color: Colors.green[700],
                           size: MediaQuery.of(context).size.width * 0.024),
@@ -115,8 +76,20 @@ class _FeedState extends State<Feed> {
                   ),
                 ),
                 new Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.13,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: new RichText(
+                        text: TextSpan(
+                          text: title,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: MediaQuery.of(context).size.height * 0.025,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                new Container(
                   padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                   child: new Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -139,12 +112,10 @@ class _FeedState extends State<Feed> {
             ),
           ),
           new Container(
-              width: MediaQuery.of(context).size.width * 0.1,
-              height: MediaQuery.of(context).size.height * 0.23,
-              decoration: new BoxDecoration(color: Colors.grey[300]),
+              decoration: new BoxDecoration(color: Colors.transparent),
+              height: 200,
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   new Container(
                     alignment: Alignment.center,
@@ -179,9 +150,12 @@ class _FeedState extends State<Feed> {
     );
   }
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
+  Widget confirm(){
+    return AlertDialog(
+      content: Container(
+
+      ),
+    );
   }
+
 }

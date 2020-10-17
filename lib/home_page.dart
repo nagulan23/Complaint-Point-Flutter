@@ -60,32 +60,16 @@ class _MyHomePageState extends State<MyHomePage> {
         body: new ListView(
           children: <Widget>[
             Feed(title: "Sewage Overflow",name: "Rohit",),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              width: double.infinity,
-              height:1,
-              decoration: BoxDecoration(
-                color: Colors.grey[300]
-              ),
-            ),
             Feed(title: "Electicity Down",name: "Geller"),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              width: double.infinity,
-              height:1,
-              decoration: BoxDecoration(
-                color: Colors.grey[300]
-              ),
-            ),
             Feed(title: "Corrupted Police Station", name:"Clarke"),
-            Container(
+            /*Container(
               margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
               width: double.infinity,
               height:1,
               decoration: BoxDecoration(
                 color: Colors.grey[300]
               ),
-            ),
+            ),*/
             Feed(title: "Damaged Subway", name:"Bob"),
           ],
         ),
