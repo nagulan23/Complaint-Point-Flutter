@@ -1,43 +1,22 @@
-
-
-
-
-
-
-
-//        This is not used
-
-
-
-
-
-
-
-
-import 'package:complaint_point/fullfeed.dart';
-import 'package:complaint_point/global.dart';
 import 'package:flutter/material.dart';
-import 'global.dart' as g;
 
-class Feed extends StatefulWidget {
-  Feed({Key key, this.title,this.color,this.name}) : super(key: key);
+class FullFeed extends StatefulWidget {
+  FullFeed({Key key, this.title,this.color,this.name}) : super(key: key);
 
   final String color,name,title;
 
   @override
-  _FeedState createState() => _FeedState(title: title,color: color,name: name);
+  _FullFeedState createState() => _FullFeedState(title: title,color: color,name: name);
 }
 
 
-class _FeedState extends State<Feed> {
+class _FullFeedState extends State<FullFeed> {
   final String color,name,title;
-  _FeedState({this.title,this.color,this.name});
+  _FullFeedState({this.title,this.color,this.name});
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      margin: EdgeInsets.fromLTRB(5, 10, 10, 10),
-      width: MediaQuery.of(context).size.width,
-      child: new Row(
+    return new Scaffold(
+      body: new Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new Container(
@@ -50,7 +29,6 @@ class _FeedState extends State<Feed> {
             ),
           ),
           new Expanded(
-            child:InkWell(
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,10 +108,6 @@ class _FeedState extends State<Feed> {
                 ),
               ],
             ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FullFeed(title: title,name: name,),));
-            },
-          ),
           ),
           new Container(
               decoration: new BoxDecoration(color: Colors.transparent),
@@ -153,10 +127,7 @@ class _FeedState extends State<Feed> {
                       ],
                     ),
                     onTap: () {
-                      setState(() {
-                        g.alert=1;
-                      });
-                      print(alert);
+                      confirm();
                     },
                   ),
                   new Container(
@@ -173,9 +144,21 @@ class _FeedState extends State<Feed> {
                     )
                   ),
                 ],
-              )
-            )
+              ))
         ],
+      ),
+    );
+  }
+
+  Widget confirm(){
+    print("123");
+    return AlertDialog(
+      content: Container(
+        child: Column(
+          children: [
+            Image.asset("assets/verify.jpg",height: 100,)
+          ],
+        ),
       ),
     );
   }
