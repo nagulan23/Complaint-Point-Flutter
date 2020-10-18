@@ -19,6 +19,18 @@ class _MyHomePageState extends State<MyHomePage> {
   bool tick=false,_alertopen=false;
 
   @override
+  void initState() {
+    setState(() {
+      _alertopen=false;
+      tick=false;
+      g.alert=0;
+      g.loc_alert=0;
+      g.vote_alert=0;
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
