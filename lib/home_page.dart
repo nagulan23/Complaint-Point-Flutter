@@ -2,25 +2,30 @@ import 'package:complaint_point/feed.dart';
 import 'package:complaint_point/fullfeed.dart';
 import 'package:complaint_point/post.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'global.dart' as g;
 
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key,this.logoutCallback}) : super(key: key);
+  final VoidCallback logoutCallback;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(logoutCallback:logoutCallback);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  _MyHomePageState({this.logoutCallback});
   int state=1;
   bool tick=false,_alertopen=false;
+  final VoidCallback logoutCallback;
+  GlobalKey<ScaffoldState> home = new GlobalKey<ScaffoldState>();
+
+  
 
   @override
   void initState() {
-    setState(() {
+    setState(()  {
       _alertopen=false;
       tick=false;
       g.alert=0;
@@ -33,12 +38,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: home,
         appBar: AppBar(
           backgroundColor: Colors.grey[800],
-          title: Text(widget.title,style: TextStyle(color: Colors.white)),
+          title: Text("Complaint Point",style: TextStyle(color: Colors.white)),
           leading: IconButton(
             icon: new Icon(Icons.menu, color: Colors.white),
             onPressed: () {
+                  home.currentState.openDrawer();
             },
           ),
           actions: <Widget>[
@@ -65,8 +72,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Messages'),
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Sign out'),
+                onTap: () {
+                  try {
+                    widget.logoutCallback();
+                  } catch (e) {
+                    print(e);
+                  }
+                },
               ),
             ],
           ),

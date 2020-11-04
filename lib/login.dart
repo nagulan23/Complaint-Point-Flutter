@@ -2,16 +2,22 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:complaint_point/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'global.dart' as g;
 
 class LoginPage extends StatefulWidget {
+  LoginPage({Key key,this.loginCallback}) : super(key: key);
+  final VoidCallback loginCallback;
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState(loginCallback:loginCallback);
 }
 
 class _LoginPageState extends State<LoginPage> {
+  _LoginPageState({Key key,this.loginCallback});
+  final VoidCallback loginCallback;
   final _formKey = new GlobalKey<FormState>();
   TextEditingController namekey = new TextEditingController(text: "");
   TextEditingController numkey = new TextEditingController(text: "");
@@ -53,36 +59,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<int> checkmail() async {
-    /*var url = g.api+"userMailInfo/";
-    var response = await http.post(url, body: {'email': email});
+    var url = g.preurl+"checkMail/";
+    var response = await http.post(url, body: {'email_id': email});
     var data=json.decode(response.body);
-    if(data["status"]=="Login")
+    if(data["status"]=="success")
     {
-      setState(() {
-        state=2;
-        crtpass=null;
-        validpass=null;
-        validnum=null;
-        validname=null;
-        password="";
-        aadhaar_page=false;
-        _formKey.currentState.reset();
-      });
-    }
-    else
-    {
-      setState(() {
-        state=3;
-        validemail=null;
-        validpass=null;
-        crtpass=null;
-        password="";
-        name="";
-        number="";
-        aadhaar_page=false;
-      });
-    }*/
-    if(email=='nagulan1645@gmail.com'){
       setState(() {
         state = 2;
         validemail = null;
@@ -101,7 +82,8 @@ class _LoginPageState extends State<LoginPage> {
         if (state == 2) _formKey.currentState.reset();
       });
     }
-    else{
+    else
+    {
       setState(() {
         state=3;
         validemail=null;
@@ -123,15 +105,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<int> login() async {
-    /*var url = g.api+"userlogin/";
-    var response = await http.post(url, body: {'email': email,'password':password});
+    var url = g.preurl+"login/";
+    var response = await http.post(url, body: {'email_id': email,'password':password});
     var data=json.decode(response.body);
-    if(data["status"]=="SUCCESS")
+    if(data["status"]=="success")
     {
       setState(() {
         crtpass=true;
+        g.uid=data["msg"];
+        g.status=true;
+        if(g.uid.startsWith("a")){
+          g.pid=g.uid.substring(1);
+          g.did="";
+        }
+        else{
+            g.did=g.uid.substring(1);
+            g.pid="";
+        }
       });
       _formKey.currentState.reset();
+      try {
+        widget.loginCallback();
+      } catch (e) {
+        print(e);
+      }
     }
     else
     {
@@ -139,17 +136,7 @@ class _LoginPageState extends State<LoginPage> {
         crtpass=false;
         password="";
       });
-    }*/
-    setState(() {
-      crtpass = true;
-    });
-    _formKey.currentState.reset();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyHomePage(
-                  title: "Complaint Point",
-                )));
+    }
     return (1);
   }
 
