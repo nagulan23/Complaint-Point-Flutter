@@ -19,19 +19,21 @@ class _LoginPageState extends State<LoginPage> {
   _LoginPageState({Key key,this.loginCallback});
   final VoidCallback loginCallback;
   final _formKey = new GlobalKey<FormState>();
-  TextEditingController namekey = new TextEditingController(text: "");
+  /*TextEditingController namekey = new TextEditingController(text: "");
   TextEditingController numkey = new TextEditingController(text: "");
   TextEditingController passkey = new TextEditingController(text: "");
   TextEditingController emailkey = new TextEditingController(text: "");
   TextEditingController genderkey = new TextEditingController(text: "");
-  TextEditingController key = new TextEditingController(text: "");
+  TextEditingController key = new TextEditingController(text: "");*/
   bool _isLoading = false;
   bool validemail;
-  bool validpass, crtpass;
-  bool validname;
+  bool validpass;
+  bool validfname;
+  bool validlname;
+  bool validano;
   bool validdob;
   bool validjob;
-  bool validaddress;
+  bool validDoorno,validStreet,validCity,validState;
   bool validzipcode;
   bool validsalary;
   bool validgender;
@@ -39,14 +41,20 @@ class _LoginPageState extends State<LoginPage> {
   bool pagenexter = false;
   String email = "",
       password = "",
-      name = "",
+      firstname = "",
+      lastname = "",
       number = "",
       gender = "",
       dob = "",
       job = "",
-      address = "",
+      ano="",
+      aDoorno = "",
+      aStreet = "",
+      aState = "",
+      aCity = "",
       zipcode = "",
-      salary = "";
+      salary = "",
+      error_msg="";
   int state = 1;
 
   bool validateAndSave() {
@@ -68,16 +76,23 @@ class _LoginPageState extends State<LoginPage> {
         state = 2;
         validemail = null;
         validpass = null;
-        crtpass = null;
-        validname=null;
+        validfname=true;
+        validlname=null;
+        validnum=null;
          validdob=null;
          validjob=null;
-         validaddress=null;
+         validDoorno=null;
+         validStreet=null;
+         validCity=null;
+         validState=null;
          validzipcode=null;
        validsalary=null;
+       validano=null;
         password = "";
-        name = "";
+        firstname = "";
+        lastname = "";
         number = "";
+        error_msg="";
         aadhaar_page = false;
         if (state == 2) _formKey.currentState.reset();
       });
@@ -85,20 +100,27 @@ class _LoginPageState extends State<LoginPage> {
     else
     {
       setState(() {
-        state=3;
         validemail=null;
         validpass=null;
-        crtpass=null;
-        validname=null;
+        validfname=null;
+        validlname=null;
+        validnum=null;
          validdob=null;
          validjob=null;
-         validaddress=null;
+         validDoorno=null;
+         validStreet=null;
+         validCity=null;
+         validState=null;
          validzipcode=null;
        validsalary=null;
+       validano=null;
         password="";
-        name="";
+        firstname = "";
+        lastname = "";
         number="";
+        error_msg="";
         aadhaar_page=false;
+        state=3;
       });
     }
     return (1);
@@ -111,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
     if(data["status"]=="success")
     {
       setState(() {
-        crtpass=true;
         g.uid=data["msg"];
         g.status=true;
         if(g.uid.startsWith("a")){
@@ -133,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     else
     {
       setState(() {
-        crtpass=false;
+        error_msg=data["msg"];
         password="";
       });
     }
@@ -141,27 +162,41 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<int> createAccount() async {
-    print("...........");
-    /*var url = g.api+"userpush/";
-    var response = await http.post(url, body: {'email': email,'password':password,'name':name,'mobile_number':number});
+    print("creating..........");
+    var url = g.preurl+"aCheck/";
+    var response = await http.post(url, body: {'aadhaar_number': ano});
     var data=json.decode(response.body);
-    if(data["status"]=="SUCCESS")
+    if(data["status"]=="success")
     {
+      print({'first_name': firstname,'last_name':lastname,'date_of_birth':dob,'gender':gender,'salary_pa':salary,'job':job,'door_no':aDoorno,'street':aStreet,'zip_code':zipcode,'email_id':email,'password':password,'aadhaar_number':ano,'department_id':null,'city':aCity,'state':aState});
+      url = g.preurl+"pSignup/";
+      response = await http.post(url, body: {'first_name': firstname,'last_name':lastname,'date_of_birth':dob,'gender':gender,'salary_pa':salary,'job':job,'door_no':aDoorno,'street':aStreet,'zip_code':zipcode,'email_id':email,'password':password,'aadhaar_number':ano,'department_id':'','city':aCity,'state':aState});
+      data=json.decode(response.body);
+      print(data);
       setState(() {
-        crtpass=true;
+        g.uid='a'+ano;
+        g.status=true;
+        if(g.uid.startsWith("a")){
+          g.pid=g.uid.substring(1);
+          g.did="";
+        }
+        else{
+            g.did=g.uid.substring(1);
+            g.pid="";
+        }
       });
+      try {
+        widget.loginCallback();
+      } catch (e) {
+        print(e);
+      }
     }
     else
     {
       setState(() {
-        crtpass=false;
-
+        error_msg="Aadhaar number already exists";
       });
-    }*/
-    setState(() {
-      crtpass = true;
-      aadhaar_page = true;
-    });
+    }
     return (1);
   }
 
@@ -186,29 +221,48 @@ class _LoginPageState extends State<LoginPage> {
             ),
         child: new Form(
           key: _formKey,
-          child: new ListView(
+          child: ScrollConfiguration(
+            behavior: MyBehavior(),
+            child:new SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
-            shrinkWrap: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               _showheader(),
               if (state != 2 && !aadhaar_page) _showEmailInput(),
-              if (state == 3 && !aadhaar_page) _showNameInput(),
+              if (state == 3 && !aadhaar_page) _showFirstNameInput(),
+              if (state == 3 && !aadhaar_page) _showLastNameInput(),
               if (state == 3 && !aadhaar_page) _showNumberInput(),
               if (state != 1 && !aadhaar_page) _showPasswordInput(),
               if (state == 3 && !aadhaar_page) _showGenderInput(),
               if (state == 3 && !aadhaar_page) _showDOBInput(),
               if (state == 3 && !aadhaar_page) _showSalarypa(),
               if (state == 3 && !aadhaar_page) _showjob(),
-              if (state == 3 && !aadhaar_page) _showaddress(),
+              if (state == 3 && !aadhaar_page) 
+              Row(
+                children: [
+                  _showDoorNo(),
+                  _showStreet(),
+                ],
+              ),
+              if (state == 3 && !aadhaar_page) 
+              Row(
+                children: [
+                  _showCity(),
+                  _showState(),
+                ],
+              ),
               if (state == 3 && !aadhaar_page) _showzipcode(),
-              if (aadhaar_page) _showAadhaarInput(),
+              if (state == 3 && aadhaar_page) _showAadhaarInput(),
+              if(state==2||(state==3&&aadhaar_page))operation(),
               _showbutton(),
               if (state != 1) _showbackbutton(),
               Container(
                 height: 50,
               )
             ],
-          ),
+            )
+          )),
         ));
   }
 
@@ -419,7 +473,7 @@ class _LoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10), gapPadding: 10),
                 prefixIcon: Icon(
-                  Icons.lock_outline,
+                  Icons.vpn_key,
                   color: Colors.white,
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -458,48 +512,25 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Container(
               margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: (validpass != null && state==2)
-                  ? Row(
-                      children: [
-                        if (validpass && crtpass == null)
-                          Icon(Icons.verified_user,
-                              color: Colors.green, size: 15),
-                        if (validpass && crtpass == null)
-                          Text(
-                            (state == 2)
-                                ? "  Verifying..."
-                                : "  Creating Account...",
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        if ((!validpass && crtpass == null) ||
-                            (crtpass != null && !crtpass))
-                          Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                            size: 15,
-                          ),
-                        if (!validpass && crtpass == null)
-                          Text(
-                            "  Empty",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        if (crtpass != null && !crtpass)
-                          Text(
-                            (state == 2)
-                                ? "  Incorrect"
-                                : "  Account already exists",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        if (validpass) Text(" ")
-                      ],
-                    )
-                  : Text(" "))
+              child: (validpass!=null)?Row(
+                    children: [
+                      if (!validpass)
+                        Icon(Icons.cancel, color: Colors.red, size: 15),
+                      if (!validpass)
+                        Text(
+                          "  Empty",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      if (validpass) Text(" ")
+                    ],
+                  ):Text(" "),
+          ),
         ],
       ),
     );
   }
 
-  Widget _showNameInput() {
+  Widget _showFirstNameInput() {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Column(
@@ -509,7 +540,7 @@ class _LoginPageState extends State<LoginPage> {
             width: double.infinity,
             margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
             alignment: Alignment.centerLeft,
-            child: Text("Name",
+            child: Text("Firstname",
                 style: TextStyle(
                     color: Colors.deepPurple[800],
                     fontSize: 17,
@@ -520,7 +551,7 @@ class _LoginPageState extends State<LoginPage> {
                 gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
                 borderRadius: BorderRadius.circular(10)),
             child: TextFormField(
-              controller: namekey,
+              //controller: namekey,
               decoration: InputDecoration(
                 errorStyle: TextStyle(height: 0),
                 contentPadding: EdgeInsets.all(10),
@@ -530,7 +561,6 @@ class _LoginPageState extends State<LoginPage> {
                   Icons.perm_identity,
                   color: Colors.white,
                 ),
-                hintText: "Firstname Lastname",
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     gapPadding: 20,
@@ -544,41 +574,127 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.text,
               onTap: () {
                 setState(() {
-                  validname = null;
+                  validfname = null;
                 });
               },
               validator: (value) {
                 if (value.toString().trim().isNotEmpty) {
                   setState(() {
-                    validname = true;
+                    validfname = true;
                   });
                 } else {
                   setState(() {
-                    validname = false;
+                    validfname = false;
                   });
                   return("");
                 }
               },
               onSaved: (newValue) {
                 setState(() {
-                  name = newValue.toString();
+                  firstname = newValue.toString().trim();
                 });
               },
             ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-            child: (validname != null)
-                ? Row(
+            child: (validfname!=null)?Row(
                     children: [
-                      if (!validname)
+                      if (!validfname)
                         Icon(Icons.cancel, color: Colors.red, size: 15),
-                      if (!validname)
+                      if (!validfname)
                         Text(
                           "  Empty",
                           style: TextStyle(color: Colors.red),
                         ),
-                      if (validname) Text(" ")
+                      if (validfname) Text(" ")
+                    ],
+                  ):Text(" ")
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showLastNameInput() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Lastname",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              //controller: namekey,
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                prefixIcon: Icon(
+                  Icons.perm_identity,
+                  color: Colors.white,
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.text,
+              onTap: () {
+                setState(() {
+                  validlname = null;
+                });
+              },
+              validator: (value) {
+                if (value.toString().trim().isNotEmpty) {
+                  setState(() {
+                    validlname = true;
+                  });
+                } else {
+                  setState(() {
+                    validlname = false;
+                  });
+                  return("");
+                }
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  lastname = newValue.toString().trim();
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+            child: (validlname != null)
+                ? Row(
+                    children: [
+                      if (!validlname)
+                        Icon(Icons.cancel, color: Colors.red, size: 15),
+                      if (!validlname)
+                        Text(
+                          "  Empty",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      if (validlname) Text(" ")
                     ],
                   )
                 : Text(" "),
@@ -664,7 +780,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (newValue) {
                 setState(() {
-                  number = newValue.toString();
+                  number = newValue.toString().trim();
                 });
               },
             ),
@@ -726,7 +842,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 10,
                       ),
                       Icon(
-                        Icons.phone_iphone,
+                        Icons.wc,
                         color: Colors.white,
                       ),
                     ]),
@@ -761,7 +877,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (newValue) {
                 setState(() {
-                  gender = newValue.toString();
+                  gender = newValue.toString().trim();
                 });
               },
             ),
@@ -823,11 +939,11 @@ class _LoginPageState extends State<LoginPage> {
                         width: 10,
                       ),
                       Icon(
-                        Icons.phone_iphone,
+                        Icons.event,
                         color: Colors.white,
                       ),
                     ]),
-                hintText: "MM-DD-YYYY",
+                hintText: "YYYY-MM-DD",
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     gapPadding: 20,
@@ -838,7 +954,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.white, decoration: TextDecoration.none),
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               onTap: () {
                 setState(() {
                   validdob = null;
@@ -858,7 +974,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (newValue) {
                 setState(() {
-                  dob = newValue.toString();
+                  dob = newValue.toString().trim();
                 });
               },
             ),
@@ -920,7 +1036,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 10,
                       ),
                       Icon(
-                        Icons.phone_iphone,
+                        Icons.account_balance_wallet,
                         color: Colors.white,
                       ),
                     ]),
@@ -939,25 +1055,25 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.number,
               onTap: () {
                 setState(() {
-                  validdob = null;
+                  validsalary= null;
                 });
               },
               validator: (value) {
                 if (value.toString().trim().isNotEmpty) {
                   setState(() {
-                    validdob = true;
+                    validsalary = true;
                   });
                   
                 } else {
                   setState(() {
-                    validdob = false;
+                    validsalary = false;
                   });
                   return("");
                 }
               },
               onSaved: (newValue) {
                 setState(() {
-                  salary = newValue.toString();
+                  salary = newValue.toString().trim();
                 });
               },
             ),
@@ -1019,7 +1135,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 10,
                       ),
                       Icon(
-                        Icons.phone_iphone,
+                        Icons.work,
                         color: Colors.white,
                       ),
                     ]),
@@ -1054,7 +1170,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (newValue) {
                 setState(() {
-                  job = newValue.toString();
+                  job = newValue.toString().trim();
                 });
               },
             ),
@@ -1081,23 +1197,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _showaddress() {
+  Widget _showDoorNo() {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: double.infinity,
-            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             alignment: Alignment.centerLeft,
-            child: Text("Address",
+            child: Text("Door no",
                 style: TextStyle(
                     color: Colors.deepPurple[800],
                     fontSize: 17,
                     fontWeight: FontWeight.w400)),
           ),
           Container(
+            width: MediaQuery.of(context).size.width/3-20,
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
                 borderRadius: BorderRadius.circular(10)),
@@ -1108,19 +1224,90 @@ class _LoginPageState extends State<LoginPage> {
                 contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10), gapPadding: 10),
-                prefixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.number,
+              onTap: () {
+                setState(() {
+                  validDoorno = null;
+                });
+              },
+              validator: (value) {
+                if (value.toString().trim().isNotEmpty) {
+                  setState(() {
+                    validDoorno = true;
+                  });
+                } else {
+                  setState(() {
+                    validDoorno = false;
+                  });
+                  return("");
+                }
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  aDoorno = newValue.toString().trim();
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+            child: (validjob != null)
+                ? Row(
                     children: [
-                      Container(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.phone_iphone,
-                        color: Colors.white,
-                      ),
-                    ]),
-                hintText: "ex: 5,Goad Road,Jaipur",
+                      if (!validDoorno)
+                        Icon(Icons.cancel, color: Colors.red, size: 15),
+                      if (!validDoorno)
+                        Text(
+                          "  Empty",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      if (validDoorno) Text(" ")
+                    ],
+                  )
+                : Text(" "),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showStreet() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Street",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width*2/3-20,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              //controller: numkey,
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     gapPadding: 20,
@@ -1134,24 +1321,24 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.text,
               onTap: () {
                 setState(() {
-                  validaddress = null;
+                  validStreet = null;
                 });
               },
               validator: (value) {
                 if (value.toString().trim().isNotEmpty) {
                   setState(() {
-                    validaddress = true;
+                    validStreet = true;
                   });
                 } else {
                   setState(() {
-                    validaddress = false;
+                    validStreet = false;
                   });
                   return("");
                 }
               },
               onSaved: (newValue) {
                 setState(() {
-                  address = newValue.toString();
+                  aStreet = newValue.toString().trim();
                 });
               },
             ),
@@ -1161,14 +1348,180 @@ class _LoginPageState extends State<LoginPage> {
             child: (validjob != null)
                 ? Row(
                     children: [
-                      if (!validaddress)
+                      if (!validStreet)
                         Icon(Icons.cancel, color: Colors.red, size: 15),
-                      if (!validaddress)
+                      if (!validStreet)
                         Text(
                           "  Empty",
                           style: TextStyle(color: Colors.red),
                         ),
-                      if (validaddress) Text(" ")
+                      if (validStreet) Text(" ")
+                    ],
+                  )
+                : Text(" "),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showState() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Text("State",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width/2-20,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              //controller: numkey,
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.text,
+              onTap: () {
+                setState(() {
+                  validState = null;
+                });
+              },
+              validator: (value) {
+                if (value.toString().trim().isNotEmpty) {
+                  setState(() {
+                    validState = true;
+                  });
+                } else {
+                  setState(() {
+                    validState = false;
+                  });
+                  return("");
+                }
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  aState = newValue.toString().trim();
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+            child: (validjob != null)
+                ? Row(
+                    children: [
+                      if (!validState)
+                        Icon(Icons.cancel, color: Colors.red, size: 15),
+                      if (!validState)
+                        Text(
+                          "  Empty",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      if (validState) Text(" ")
+                    ],
+                  )
+                : Text(" "),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showCity() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Text("City",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width/2-20,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              //controller: numkey,
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.text,
+              onTap: () {
+                setState(() {
+                  validCity = null;
+                });
+              },
+              validator: (value) {
+                if (value.toString().trim().isNotEmpty) {
+                  setState(() {
+                    validCity = true;
+                  });
+                } else {
+                  setState(() {
+                    validCity = false;
+                  });
+                  return("");
+                }
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  aCity = newValue.toString().trim();
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+            child: (validjob != null)
+                ? Row(
+                    children: [
+                      if (!validCity)
+                        Icon(Icons.cancel, color: Colors.red, size: 15),
+                      if (!validCity)
+                        Text(
+                          "  Empty",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      if (validCity) Text(" ")
                     ],
                   )
                 : Text(" "),
@@ -1213,7 +1566,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 10,
                       ),
                       Icon(
-                        Icons.phone_iphone,
+                        Icons.home,
                         color: Colors.white,
                       ),
                     ]),
@@ -1248,14 +1601,14 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (newValue) {
                 setState(() {
-                  zipcode = newValue.toString();
+                  zipcode = newValue.toString().trim();
                 });
               },
             ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-            child: (validaddress != null)
+            child: (validzipcode != null)
                 ? Row(
                     children: [
                       if (!validzipcode)
@@ -1277,7 +1630,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _showAadhaarInput() {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      margin: EdgeInsets.fromLTRB(20, 0,20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -1301,23 +1654,36 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 17,
                     fontWeight: FontWeight.w400)),
           ),
-          PinFieldAutoFill(
-            codeLength: 12,
+          PinInputTextFormField(
+            pinLength: 12,
             keyboardType: TextInputType.number,
+            decoration: UnderlineDecoration(colorBuilder: FixedColorBuilder(Colors.red)),
+            onChanged: (newValue) {
+              setState(() {
+                ano=newValue.toString();
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                ano=newValue.toString();
+              });
+            },
+            validator: (newValue) {
+            },
           ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-            child: (validname != null)
+            child: (validano != null)
                 ? Row(
                     children: [
-                      if (!validname)
+                      if (!validano)
                         Icon(Icons.cancel, color: Colors.red, size: 15),
-                      if (!validname)
+                      if (!validano)
                         Text(
                           "  Empty",
                           style: TextStyle(color: Colors.red),
                         ),
-                      if (validname) Text(" ")
+                      if (validano) Text(" ")
                     ],
                   )
                 : Text(" "),
@@ -1326,19 +1692,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  Widget operation(){
+    return Container(
+      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+    child:Row(
+      children: [
+        if(_isLoading&&error_msg=="")Icon(Icons.verified_user,color: Colors.green, size: 15),
+        if(_isLoading&&error_msg=="")Text((state == 2)? "  Verifying...": "  Creating Account...",style: TextStyle(color: Colors.green),),
+        if(error_msg!="")Icon(Icons.cancel,color: Colors.red, size: 15),
+        if(error_msg!="")Text(error_msg,style: TextStyle(color: Colors.red),),
+      ]
+    )
+    );
+  }
 
   Widget _showbutton() {
     return Container(
-      margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 4, 40,
-          MediaQuery.of(context).size.width / 4, 0),
+      margin: EdgeInsets.fromLTRB(10, 40,10, 0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
         color: Colors.blue,
         child: (_isLoading)
             ? SizedBox(
-                width: 15,
-                height: 15,
+                width: 18,
+                height: 18,
                 child: CircularProgressIndicator(
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                 ))
@@ -1350,23 +1728,22 @@ class _LoginPageState extends State<LoginPage> {
                         : (aadhaar_page)
                             ? "Create Account"
                             : "Next",
-                style: TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
         onPressed: () async {
           FocusManager.instance.primaryFocus.unfocus();
-          
-          if (validateAndSave() && ((state == 1) ||
-              (state == 2 ) ||
-              (state == 3 ))) {
+          if (validateAndSave() && ((state == 1) || (state == 2 ) || (state == 3 ))) {
             setState(() {
               _isLoading = true;
+              error_msg="";
             });
-            Timer(Duration(seconds: 2), () async {
-              (state == 1)
-                  ? await checkmail()
-                  : (state == 2)
-                      ? await login()
-                      : (aadhaar_page)?await login():await createAccount();
+            Timer(Duration(seconds: 0), ()  async{
+              if(state == 1) await checkmail();
+              else if(state == 2) await login();
+              else if(aadhaar_page) await createAccount();
+              else setState(() {
+                aadhaar_page=true;
+              });
               setState(() {
                 _isLoading = false;
               });
@@ -1400,5 +1777,13 @@ class _LoginPageState extends State<LoginPage> {
         },
       ),
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }
