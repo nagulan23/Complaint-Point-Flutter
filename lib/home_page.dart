@@ -27,8 +27,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List dat;
 
   Future<String> getfeed() async {
+    print("fetching.......");
     final response = await http.get(url);
-
     setState(() {
       dat = json.decode(response.body);
     });
@@ -51,8 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(g.uid);
-    print(g.pid);
     return new Scaffold(
       key: home,
       appBar: AppBar(
@@ -65,10 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
         actions: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
+          Container(
+            height: 10,
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration( borderRadius:BorderRadius.circular(5),),
+            child: Image.asset("assets/logo.jpg")
+          )
         ],
       ),
       drawer: Drawer(
@@ -105,7 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           AbsorbPointer(
             absorbing: _alertopen,
-            child: ListView.builder(
+            child: (dat==null)?Container(alignment: Alignment.center,child:CircularProgressIndicator()):
+            ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: dat == null ? 0 : dat.length,

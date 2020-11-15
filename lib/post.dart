@@ -6,6 +6,8 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:direct_select/direct_select.dart';
+import 'global.dart' as g;
+import 'package:flushbar/flushbar.dart';
 
 class PostPage extends StatefulWidget {
   @override
@@ -21,7 +23,7 @@ class _PostPageState extends State<PostPage> {
     "Education",
     "Transport",
   ];
-  final derptment_id=[-1,124563257812,233245568899];
+  final department_id=[-1,124563257812,233245568899];
   final government = [
     "Long press to select Government",
     "Central Government",
@@ -32,7 +34,7 @@ class _PostPageState extends State<PostPage> {
   ];
   int selectedDep = 0, selectedGov = 0;
   bool tick = false;
-  String subject="",body="",reforms_type="",person_c="";
+  String subject="",body="",astate="",personc="",city="",period="",zipcode="",proof1="",proof2="",proof3="";
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +301,9 @@ class _PostPageState extends State<PostPage> {
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
               onSaved: (newValue) {
-
+                setState(() {
+                  zipcode=newValue;
+                });
               },
             ),
           ),
@@ -392,9 +396,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  astate=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -446,9 +452,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  personc=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -500,9 +508,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  city=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -554,9 +564,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  city=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -602,9 +614,11 @@ class _PostPageState extends State<PostPage> {
                   color: Colors.white, decoration: TextDecoration.none),
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  subject=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -653,9 +667,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.multiline,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  body=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -702,9 +718,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.url,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  proof1=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -751,9 +769,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.url,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  proof2=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -800,9 +820,11 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.url,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+                setState(() {
+                  proof3=newValue;
+                });
+              },
             ),
           ),
         ],
@@ -851,7 +873,47 @@ class _PostPageState extends State<PostPage> {
                 "Submit",
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
-        onPressed: () async {},
+        onPressed: ()  async{
+          setState(() {
+            _isLoading=true;
+          });
+          _formKey.currentState.save();
+          String url=g.preurl+"grievance/";
+          print(url);
+          print(state);
+          final response = await http.post(url, body: {
+            "subject": subject,
+            "grievance": body,
+            "upvote": "0",
+            "downvote": "0",
+            "current_status": "posted",
+            "arg": (state==1)?"1":"",
+            "pg": (state==1)?"":"3",
+            "g_department_id": department_id[selectedDep].toString(),
+            "reforms_type": government[selectedGov],
+            "person_concerned": personc,
+            "g_aadhaar_number": g.pid,
+            "type": "report",
+            "zip_code": zipcode,
+            "city": city,
+            "state": astate,
+            "period": period,
+            "proof1": proof1,
+            "proof2": proof2,
+            "proof3": proof3,
+          });
+          print("===========");
+          var data = json.decode(response.body);
+          print(data);
+          Flushbar(
+                  title:  "Grivenace successfully submitted",
+                  message:  "Thank you",
+                  duration:  Duration(seconds: 3),              
+                )..show(context);
+          setState(() {
+            _isLoading=false;
+          });
+        },
       ),
     );
   }

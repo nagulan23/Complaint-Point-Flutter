@@ -36,7 +36,7 @@ dependencies:
   flutter_launcher_icons: ^0.8.1
   pin_input_text_field: ^3.1.1
   image_picker: ^0.6.6+5
-  
+  flushbar: ^1.10.4
 
 
 
@@ -59,6 +59,7 @@ flutter:
 
   assets:
       - assets/logo.png
+      - assets/logo.jpg
       - assets/gov.png
       - assets/admin.png
       - assets/public.png
