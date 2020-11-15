@@ -32,6 +32,7 @@ class _PostPageState extends State<PostPage> {
   ];
   int selectedDep = 0, selectedGov = 0;
   bool tick = false;
+  String subject="",body="",reforms_type="",person_c="";
 
   @override
   Widget build(BuildContext context) {
@@ -297,9 +298,9 @@ class _PostPageState extends State<PostPage> {
               cursorColor: Colors.white,
               cursorRadius: Radius.circular(10),
               keyboardType: TextInputType.text,
-              onTap: () {},
-              validator: (value) {},
-              onSaved: (newValue) {},
+              onSaved: (newValue) {
+
+              },
             ),
           ),
         ],

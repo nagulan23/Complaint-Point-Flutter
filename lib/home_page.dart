@@ -1,5 +1,6 @@
 import 'package:complaint_point/fullfeed.dart';
 import 'package:complaint_point/post.dart';
+import 'package:complaint_point/profile.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:developer';
@@ -50,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(g.uid);
+    print(g.pid);
     return new Scaffold(
       key: home,
       appBar: AppBar(
@@ -138,16 +141,32 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey[500],
         selectedIconTheme: IconThemeData(size: 30),
-        onTap: (value) {
+        onTap: (value) async {
           setState(() {
             state = value;
           });
-          if (state == 0)
-            Navigator.push(
+          if (state == 0){
+            await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PostPage(),
                 ));
+            this.getfeed();
+            setState(() {
+              state=1;
+            });
+          }
+          if (state == 2){
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ));
+            this.getfeed();
+            setState(() {
+              state=1;
+            });
+          }
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -264,7 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
           new Container(
             //width: MediaQuery.of(context).size.width * 0.05,
             width: 5,
-            height: 200,
+            height: 170,
             decoration: new BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.greenAccent[700],

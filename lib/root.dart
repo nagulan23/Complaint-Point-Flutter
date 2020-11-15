@@ -45,6 +45,7 @@ class _RootPageState extends State<RootPage> {
     setState(() {
       prefs.setBool('isLoggedIn',true);
       prefs.setString('userid',g.uid);
+      g.pid=g.uid.substring(1);
     });
   }
 
@@ -100,11 +101,10 @@ class _RootPageState extends State<RootPage> {
     {
       if(g.status)
       {
-        print("////////////");
         setState(() {
           g.uid= prefs.getString("userid");
+          g.pid=g.uid.substring(1);
         });
-        print("\\\\\\\\\\\\");
         return new MyHomePage(logoutCallback: logout,);
       }
       else{

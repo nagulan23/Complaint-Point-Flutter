@@ -165,7 +165,22 @@ class _FullFeedState extends State<FullFeed> {
                               ),
                             ),
                             new Container(
-                              margin: EdgeInsets.symmetric(vertical: 20.0),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
+                              child: new RichText(
+                                text: TextSpan(
+                                  text: "Proofs",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.03,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            new Container(
                               height: MediaQuery.of(context).size.height * 0.4,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
