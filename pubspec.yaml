@@ -59,6 +59,7 @@ flutter:
 
   assets:
       - assets/logo.png
+      - assets/no_results_found.png
       - assets/logo.jpg
       - assets/gov.png
       - assets/admin.png

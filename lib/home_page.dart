@@ -6,6 +6,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Dgrievance.dart';
+import 'Rgrievance.dart';
+import 'Ugrievance.dart';
 import 'global.dart' as g;
 
 class MyHomePage extends StatefulWidget {
@@ -28,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<String> getfeed() async {
     print("fetching.......");
-    final response = await http.get(url);
+    final response = await http.post(url,body: {"aadhaar_number":g.pid});
     setState(() {
       dat = json.decode(response.body);
     });
@@ -86,6 +89,39 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontSize: 24,
                 ),
               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Reported Grievances'),
+              onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Rgrievance(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Upvoted Grievances'),
+              onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Ugrievance(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Downvoted Grievances'),
+              onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Dgrievance(),
+                ));
+              },
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),

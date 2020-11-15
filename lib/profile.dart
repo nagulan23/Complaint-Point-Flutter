@@ -95,8 +95,7 @@ class MapScreenState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          title: new Text("Complaint point"),
+        title: Text("Complaint Point", style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.grey[800],
         ),
         body: new Container(
