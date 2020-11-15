@@ -19,10 +19,9 @@ class _PostPageState extends State<PostPage> {
   final department = [
     "Long press to select Department",
     "Education",
-    "Sanitation",
-    "Revenue",
     "Transport",
   ];
+  final derptment_id=[-1,124563257812,233245568899];
   final government = [
     "Long press to select Government",
     "Central Government",
@@ -89,8 +88,11 @@ class _PostPageState extends State<PostPage> {
               if (state == 2) _showCityInput(),
               if (state == 2) _showPeriodInput(),
               if (state == 2) _showzipcode(),
+              if (state == 1 || state == 2) _showSubjectInput(),
               if (state == 1 || state == 2) _showTextInput(),
-              if (state == 1 || state == 2) _showproofsinput(),
+              if (state == 1 || state == 2) _showProof1Input(),
+              if (state == 1 || state == 2) _showProof2Input(),
+              if (state == 1 || state == 2) _showProof3Input(),
               if (state == 1 || state == 2) _tandc(),
               if (state == 1 || state == 2) _showSubmitbutton(),
             ],
@@ -561,6 +563,54 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
+  Widget _showSubjectInput() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Subject",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              maxLines: 1,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              onTap: () {},
+              validator: (value) {},
+              onSaved: (newValue) {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _showTextInput() {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -612,23 +662,151 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  Widget _showproofsinput() {
-    return new Container(
-        margin: EdgeInsets.fromLTRB(20, 30, 0, 0),
-        child: Row(
-          children: [
-            Icon(
-              Icons.library_add,
-              color: Colors.indigo,
-              size: 30,
-            ),
-            Text("   Upload the required Proofs",
+  Widget _showProof1Input() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Link of proof 1",
                 style: TextStyle(
                     color: Colors.deepPurple[800],
                     fontSize: 17,
                     fontWeight: FontWeight.w400)),
-          ],
-        ));
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              maxLines: 1,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.url,
+              onTap: () {},
+              validator: (value) {},
+              onSaved: (newValue) {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showProof2Input() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Link of proof 2",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              maxLines: 1,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.url,
+              onTap: () {},
+              validator: (value) {},
+              onSaved: (newValue) {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showProof3Input() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Link of proof 3",
+                style: TextStyle(
+                    color: Colors.deepPurple[800],
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400)),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              decoration: InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                contentPadding: EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10), gapPadding: 10),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    gapPadding: 20,
+                    borderSide: BorderSide(color: Colors.indigo[800])),
+              ),
+              autofocus: false,
+              maxLines: 1,
+              style: TextStyle(
+                  color: Colors.white, decoration: TextDecoration.none),
+              cursorColor: Colors.white,
+              cursorRadius: Radius.circular(10),
+              keyboardType: TextInputType.url,
+              onTap: () {},
+              validator: (value) {},
+              onSaved: (newValue) {},
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _tandc() {
