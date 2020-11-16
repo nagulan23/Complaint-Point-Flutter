@@ -166,7 +166,7 @@ class _FullFeedState extends State<FullFeed> {
                             ),
                             new Container(
                               alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
+                              padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
                               child: new RichText(
                                 text: TextSpan(
                                   text: "Proofs",
@@ -286,94 +286,7 @@ class _FullFeedState extends State<FullFeed> {
               ],
             ),
           ),
-          if (g.alert == 1) confirm()
         ],
-      ),
-    );
-  }
-
-  Widget confirm() {
-    return AlertDialog(
-      title: Text(
-        (g.vote_alert == 0) ? "Up Vote" : "Down Vote",
-        textAlign: TextAlign.center,
-      ),
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              (g.loc_alert == 0) ? "assets/verify.jpg" : "assets/error.png",
-              height: 100,
-            ),
-            Container(
-              child: Text(
-                (g.loc_alert == 0)
-                    ? "Your account has been verified"
-                    : "There has been an error while verifying your account",
-                textAlign: TextAlign.center,
-              ),
-            ),
-            if (g.loc_alert == 0)
-              new Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: CheckboxListTile(
-                  title: Text(
-                      "By ticking this, you confirm that this grievance is genuinely  true and you are responsible for any malicious activity",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400)),
-                  onChanged: (bool value) {
-                    setState(() {
-                      tick = value;
-                    });
-                  },
-                  value: tick,
-                  activeColor: Colors.green,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                ),
-              ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (g.loc_alert == 0)
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.green, width: 2),
-                    ),
-                    child: Text(
-                      "Proceed",
-                      style: TextStyle(color: Colors.green),
-                    ),
-                    color: Colors.white,
-                    onPressed: () {},
-                  ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.blue, width: 2),
-                  ),
-                  child: Text(
-                    "Back",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                  color: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      g.alert = 0;
-                      _alertopen = false;
-                    });
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
       ),
     );
   }
