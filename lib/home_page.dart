@@ -171,7 +171,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     dat[index]["city"],
                     dat[index]["state"],
                     dat[index]["block"].toString(),
-                    dat[index]["btype"].toString()
+                    dat[index]["btype"].toString(),
+                    dat[index]["current_status"].toString()
                   ];
                   return new Container(
                     child: Column(
@@ -369,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 170,
             decoration: new BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.greenAccent[700],
+              color: (data[10]=='posted')?Colors.greenAccent[700]:Colors.orangeAccent[700],
             ),
           ),
           new Expanded(
@@ -386,6 +387,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           new CircleAvatar(
                             radius: MediaQuery.of(context).size.width * 0.05,
+                            backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
                                 "https://www.thescentedskunk.com/wp-content/uploads/2017/05/Profile-pic-circle-transparent-background-1-e1503671090517.png"),
                           ),

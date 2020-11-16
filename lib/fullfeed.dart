@@ -121,15 +121,29 @@ class _FullFeedState extends State<FullFeed> {
                                 ],
                               ),
                             ),
-                            new Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              alignment: Alignment.topLeft,
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[600],
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(20))),
+                            Row(
+                              children: [
+                                new Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  alignment: Alignment.topLeft,
+                                  width: MediaQuery.of(context).size.width * 0.4,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                      color: (data[10]=='posted')?Colors.greenAccent[700]:Colors.orangeAccent[700],
+                                      borderRadius: BorderRadius.horizontal(
+                                          right: Radius.circular(20))),
+                                ),
+                                new Container(
+                                  margin: EdgeInsets.fromLTRB(10,0 , 0, 0),
+                                  alignment: Alignment.topLeft,
+                                  child: Text("status:  "),
+                                ),
+                                new Container(
+                                  margin: EdgeInsets.fromLTRB(0,0 , 0, 0),
+                                  alignment: Alignment.topLeft,
+                                  child: Text((data[10]=='posted')?'Posted':'Resolved', style:TextStyle(color: (data[10]=='posted')?Colors.greenAccent[700]:Colors.orangeAccent[700])),
+                                ),
+                              ],
                             ),
                             new Container(
                               alignment: Alignment.centerLeft,
