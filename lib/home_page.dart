@@ -78,12 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-              ),
-              child: Text(
-                'User Centre',
+              Container(
+                decoration: BoxDecoration(
+                  color:  Colors.grey[800],
+                ),
+                padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
+                alignment: Alignment.center,
+                child:Text(
+                'Action Centre',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -91,7 +93,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.thumbs_up_down),
               title: Text('Reported Grievances'),
               onTap: () {
                 Navigator.push(
@@ -102,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(Icons.thumb_up),
               title: Text('Upvoted Grievances'),
               onTap: () {
                 Navigator.push(
@@ -113,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: Icon(Icons.thumb_down),
               title: Text('Downvoted Grievances'),
               onTap: () {
                 Navigator.push(
@@ -155,7 +168,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     dat[index]["downvote"].toString(),
                     dat[index]["name"],
                     dat[index]["city"],
-                    dat[index]["state"]
+                    dat[index]["state"],
+                    dat[index]["block"].toString()
                   ];
                   return new Container(
                     child: Column(
@@ -419,64 +433,106 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
-          new Container(
-              decoration: new BoxDecoration(color: Colors.transparent),
-              height: 200,
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  new InkWell(
-                    child: Column(
-                      children: [
-                        new Icon(
-                          Icons.thumb_up_outlined,
-                          color: Colors.blue[700],
-                          size: MediaQuery.of(context).size.height * 0.04,
-                        ),
-                        new Text(
-                          data[3],
-                          style:
-                              TextStyle(color: Colors.grey[800], fontSize: 12),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      setState(() {
-                        g.alert = 1;
-                        g.loc_alert = 0;
-                        g.vote_alert = 0;
-                        _alertopen = true;
-                      });
-                    },
-                  ),
-                  new InkWell(
-                    child: Column(
-                      children: [
-                        new Icon(
-                          Icons.thumb_down_outlined,
-                          color: Colors.blue,
-                          size: MediaQuery.of(context).size.height * 0.04,
-                        ),
-                        new Text(
-                          data[4],
-                          style:
-                              TextStyle(color: Colors.grey[800], fontSize: 12),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      setState(() {
-                        g.alert = 1;
-                        g.loc_alert = 0;
-                        g.vote_alert = 1;
-                        _alertopen = true;
-                      });
-                    },
-                  ),
-                ],
-              ))
+          if (data[8] == 'false')
+            vote(context, data[3], data[4])
+          else
+            cancel(context, data[3], data[4])
         ],
       ),
     );
   }
+
+  Widget vote(context, String upvote, String downvote) {
+    return new Container(
+        decoration: new BoxDecoration(color: Colors.transparent),
+        height: 200,
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            new InkWell(
+              child: Column(
+                children: [
+                  new Icon(
+                    Icons.thumb_up_outlined,
+                    color: Colors.blue[700],
+                    size: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  new Text(
+                    upvote,
+                    style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                  )
+                ],
+              ),
+              onTap: () {
+                setState(() {
+                  g.alert = 1;
+                  g.loc_alert = 0;
+                  g.vote_alert = 0;
+                  _alertopen = true;
+                });
+              },
+            ),
+            new InkWell(
+              child: Column(
+                children: [
+                  new Icon(
+                    Icons.thumb_down_outlined,
+                    color: Colors.blue,
+                    size: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  new Text(
+                    downvote,
+                    style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                  )
+                ],
+              ),
+              onTap: () {
+                setState(() {
+                  g.alert = 1;
+                  g.loc_alert = 0;
+                  g.vote_alert = 1;
+                  _alertopen = true;
+                });
+              },
+            ),
+          ],
+        ));
+  }
+
+  Widget cancel(context, String upvote, String downvote) {
+    return new Container(
+        decoration: new BoxDecoration(color: Colors.transparent),
+        height: 200,
+        child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Column(
+                children: [
+                  new Icon(
+                    Icons.thumb_up_outlined,
+                    color: Colors.grey[800],
+                    size: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  new Text(
+                    upvote,
+                    style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                  )
+                ],
+              ),
+              new Column(
+                children: [
+                  new Icon(
+                    Icons.thumb_down_outlined,
+                    color: Colors.grey[800],
+                    size: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  new Text(
+                    downvote,
+                    style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                  )
+                ],
+              )
+            ]));
+  }
+
 }
