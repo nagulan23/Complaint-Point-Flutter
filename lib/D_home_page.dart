@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'D_fullfeed.dart';
 import 'D_profile.dart';
+import 'developer_info.dart';
 import 'global.dart' as g;
 
 class DHomePage extends StatefulWidget {
@@ -117,6 +118,17 @@ class _DHomePageState extends State<DHomePage> {
                   recipients: ['nagulan1645@gmail.com','srinivasananthu24@gmail.com'],
                 );
                 await FlutterEmailSender.send(email);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.developer_mode),
+              title: Text('Developers'),
+              onTap: ()  {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeveloperInfo(),
+                ));
               },
             ),
             ListTile(

@@ -16,6 +16,8 @@ class DgrievanceState extends State<Dgrievance>{
   List<TextEditingController> control = List<TextEditingController>(8);
   final FocusNode myFocusNode = FocusNode();
   List dat;
+  List profile_img=['https://cdn.business2community.com/wp-content/uploads/2014/04/profile-picture-300x300.jpg','https://www.attractivepartners.co.uk/wp-content/uploads/2017/06/profile.jpg','https://organicthemes.com/demo/profile/files/2018/05/profile-pic.jpg','https://www.irreverentgent.com/wp-content/uploads/2018/03/Awesome-Profile-Pictures-for-Guys-look-away2.jpg','https://view.factsmgt.com/ch-me/staff186_2.jpg'];
+
 
   Future<String> getdata() async {
     print("fetching.......");
@@ -104,11 +106,10 @@ class DgrievanceState extends State<Dgrievance>{
                         children: <Widget>[
                           new CircleAvatar(
                             radius: MediaQuery.of(context).size.width * 0.05,
-                            backgroundImage: NetworkImage(
-                                "https://www.thescentedskunk.com/wp-content/uploads/2017/05/Profile-pic-circle-transparent-background-1-e1503671090517.png"),
+                            backgroundImage: NetworkImage(profile_img[int.parse(data[0])%5]),
                           ),
                           new Text(
-                            data[5],
+                            "  "+data[5],
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize:

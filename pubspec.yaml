@@ -63,6 +63,11 @@ flutter:
       - assets/logo.png
       - assets/no_results_found.png
       - assets/logo.jpg
+      - assets/p1.jpg
+      - assets/p2.jpg
+      - assets/p4.jpg
+      - assets/p3.jpg
+      - assets/p5.png
       - assets/gov.png
       - assets/admin.png
       - assets/public.png

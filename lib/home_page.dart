@@ -1,3 +1,4 @@
+import 'package:complaint_point/developer_info.dart';
 import 'package:complaint_point/fullfeed.dart';
 import 'package:complaint_point/post.dart';
 import 'package:complaint_point/profile.dart';
@@ -30,6 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<ScaffoldState> home = new GlobalKey<ScaffoldState>();
   String url = g.preurl + "publicFeed/";
   List dat;
+  List profile_img=['https://cdn.business2community.com/wp-content/uploads/2014/04/profile-picture-300x300.jpg','https://www.attractivepartners.co.uk/wp-content/uploads/2017/06/profile.jpg','https://organicthemes.com/demo/profile/files/2018/05/profile-pic.jpg','https://www.irreverentgent.com/wp-content/uploads/2018/03/Awesome-Profile-Pictures-for-Guys-look-away2.jpg','https://view.factsmgt.com/ch-me/staff186_2.jpg'];
+
 
   Future<String> getfeed() async {
     print("fetching.......");
@@ -155,6 +158,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   recipients: ['nagulan1645@gmail.com','srinivasananthu24@gmail.com'],
                 );
                 await FlutterEmailSender.send(email);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.developer_mode),
+              title: Text('Developers'),
+              onTap: ()  {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeveloperInfo(),
+                ));
               },
             ),
             ListTile(
@@ -437,8 +451,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           new CircleAvatar(
                             radius: MediaQuery.of(context).size.width * 0.05,
                             backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                                "https://www.thescentedskunk.com/wp-content/uploads/2017/05/Profile-pic-circle-transparent-background-1-e1503671090517.png"),
+                            backgroundImage: NetworkImage(profile_img[int.parse(data[0])%5]),
                           ),
                           new Text(
                             "  "+data[5],
