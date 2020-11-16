@@ -169,7 +169,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     dat[index]["name"],
                     dat[index]["city"],
                     dat[index]["state"],
-                    dat[index]["block"].toString()
+                    dat[index]["block"].toString(),
+                    dat[index]["btype"].toString()
                   ];
                   return new Container(
                     child: Column(
@@ -436,7 +437,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (data[8] == 'false')
             vote(context, data[3], data[4])
           else
-            cancel(context, data[3], data[4])
+            cancel(context, data[3], data[4],data[9])
         ],
       ),
     );
@@ -454,7 +455,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   new Icon(
                     Icons.thumb_up_outlined,
-                    color: Colors.blue[700],
+                    color: Colors.blue,
                     size: MediaQuery.of(context).size.height * 0.04,
                   ),
                   new Text(
@@ -499,7 +500,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget cancel(context, String upvote, String downvote) {
+  Widget cancel(context, String upvote, String downvote,String type) {
     return new Container(
         decoration: new BoxDecoration(color: Colors.transparent),
         height: 200,
@@ -510,7 +511,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   new Icon(
                     Icons.thumb_up_outlined,
-                    color: Colors.grey[800],
+                    color: (type=='1')?Colors.blue[700]:Colors.grey[800],
                     size: MediaQuery.of(context).size.height * 0.04,
                   ),
                   new Text(
@@ -523,7 +524,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   new Icon(
                     Icons.thumb_down_outlined,
-                    color: Colors.grey[800],
+                    color: (type=='2')?Colors.blue[700]:Colors.grey[800],
                     size: MediaQuery.of(context).size.height * 0.04,
                   ),
                   new Text(
