@@ -38,6 +38,7 @@ dependencies:
   image_picker: ^0.6.6+5
   flushbar: ^1.10.4
   flutter_swiper: ^1.1.6
+  flutter_email_sender: ^3.0.1
 
 
 

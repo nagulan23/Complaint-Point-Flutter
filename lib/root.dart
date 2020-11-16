@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'dart:async';
+import 'D_home_page.dart';
 import 'home_page.dart';
 import 'global.dart' as g;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -107,7 +108,7 @@ class _RootPageState extends State<RootPage> {
           g.pid=g.uid.substring(1);
           g.did=g.uid.substring(1);
         });
-        return new MyHomePage(logoutCallback: logout,);
+        return (g.uid.startsWith("a"))?new MyHomePage(logoutCallback: logout,):new DHomePage(logoutCallback: logout,);
       }
       else{
         return LoginPage(loginCallback: login,);

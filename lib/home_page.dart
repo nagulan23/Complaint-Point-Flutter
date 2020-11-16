@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'Dgrievance.dart';
 import 'Rgrievance.dart';
 import 'Ugrievance.dart';
@@ -24,7 +25,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState({this.logoutCallback});
   int state = 1;
-  bool tick = false, _alertopen = false,_isLoading=false;
+  bool tick = false, _alertopen = false,_isLoading=false,_showInfo=false;
   final VoidCallback logoutCallback;
   GlobalKey<ScaffoldState> home = new GlobalKey<ScaffoldState>();
   String url = g.preurl + "publicFeed/";
@@ -67,11 +68,18 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
         actions: <Widget>[
-          Container(
+          InkWell(
+          child:Container(
             height: 10,
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration( borderRadius:BorderRadius.circular(5),),
             child: Image.asset("assets/logo.jpg")
+          ),
+          onTap: () {
+            setState(() {
+              _showInfo=true;
+            });
+          },
           )
         ],
       ),
@@ -138,6 +146,18 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.bug_report),
+              title: Text('Report a Bug'),
+              onTap: () async {
+                final Email email = Email(
+                  body: '',
+                  subject: 'Bug in Complaint Point',
+                  recipients: ['nagulan1645@gmail.com','srinivasananthu24@gmail.com'],
+                );
+                await FlutterEmailSender.send(email);
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Sign out'),
               onTap: () {
@@ -154,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           AbsorbPointer(
-            absorbing: _alertopen,
+            absorbing: _alertopen || _showInfo,
             child: (dat==null)?Container(alignment: Alignment.center,child:CircularProgressIndicator()):
             ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -183,7 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 }),
           ),
-          if (g.alert == 1) confirm()
+          if (g.alert == 1) confirm(),
+          if(_showInfo)appInfo()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -237,6 +258,34 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget appInfo() {
+    return AlertDialog(
+      backgroundColor: Colors.grey[700],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            child: Image.asset("assets/logo.png",height: 80,),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Text("Complaint Point acts as a bridge to connect People and the Government. Government is an operational body by the people, of the people and for the people. So we need you to keep the wheel running. Thanks for your support!",style: TextStyle(color: Colors.white),),
+          ),
+          RaisedButton(
+            color: Colors.white,
+            child: Text("wow!",style: TextStyle(color: Colors.grey[700],fontSize: 25)),
+            onPressed: () {
+              setState(() {
+                _showInfo=false;
+              });
+            },
+          )
+        ],
+      )
     );
   }
 
@@ -392,7 +441,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 "https://www.thescentedskunk.com/wp-content/uploads/2017/05/Profile-pic-circle-transparent-background-1-e1503671090517.png"),
                           ),
                           new Text(
-                            data[5],
+                            "  "+data[5],
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize:
