@@ -1,6 +1,7 @@
 import 'package:complaint_point/fullfeed.dart';
 import 'package:complaint_point/post.dart';
 import 'package:complaint_point/profile.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:developer';
@@ -23,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState({this.logoutCallback});
   int state = 1;
-  bool tick = false, _alertopen = false;
+  bool tick = false, _alertopen = false,_isLoading=false;
   final VoidCallback logoutCallback;
   GlobalKey<ScaffoldState> home = new GlobalKey<ScaffoldState>();
   String url = g.preurl + "publicFeed/";
@@ -267,7 +268,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: CheckboxListTile(
                   title: Text(
-                      "By ticking this, you confirm that this grievance is genuinely  true and you are responsible for any malicious activity",
+                      (g.vote_alert==0)?"By ticking this, you confirm that this grievance is genuinely  true and you are responsible for any malicious activity":
+                      "By ticking this, you confirm that this grievance is genuinely  spam and you are responsible for any malicious activity",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: Colors.red,
@@ -298,7 +300,36 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(color: Colors.green),
                     ),
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        _isLoading=true;
+                      });
+                      var url=g.preurl+"vote/";
+                      if(g.vote_alert==0){
+                        final response = await http.post(url,body: {"g_aadhaar_number":g.pid,'a_grievance_id':g.vote_gid,'type':'upvote'});
+                        
+                        Flushbar(
+                                title:  "UpVote successfully submitted",
+                                message:  "Thank you",
+                                duration:  Duration(seconds: 3),              
+                              )..show(context);
+                      }
+                      else{
+                        final response = await http.post(url,body: {"g_aadhaar_number":g.pid,'a_grievance_id':g.vote_gid,'type':'downvote'});
+                        
+                        Flushbar(
+                                title:  "UpVote successfully submitted",
+                                message:  "Thank you",
+                                duration:  Duration(seconds: 3),              
+                              )..show(context);
+                      }
+                      await getfeed();
+                      setState(() {
+                        g.alert = 0;
+                        _alertopen = false;
+                        _isLoading=false;
+                      });
+                    },
                   ),
                 RaisedButton(
                   shape: RoundedRectangleBorder(
@@ -435,7 +466,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           if (data[8] == 'false')
-            vote(context, data[3], data[4])
+            vote(context, data[3], data[4],data[0])
           else
             cancel(context, data[3], data[4],data[9])
         ],
@@ -443,7 +474,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget vote(context, String upvote, String downvote) {
+  Widget vote(context, String upvote, String downvote,String gid) {
     return new Container(
         decoration: new BoxDecoration(color: Colors.transparent),
         height: 200,
@@ -466,6 +497,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onTap: () {
                 setState(() {
+                  g.vote_gid=gid;
                   g.alert = 1;
                   g.loc_alert = 0;
                   g.vote_alert = 0;
@@ -489,6 +521,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onTap: () {
                 setState(() {
+                  g.vote_gid=gid;
                   g.alert = 1;
                   g.loc_alert = 0;
                   g.vote_alert = 1;

@@ -22,8 +22,9 @@ class _PostPageState extends State<PostPage> {
     "Long press to select Department",
     "Education",
     "Transport",
+    "Health",
   ];
-  final department_id=[-1,124563257812,233245568899];
+  final department_id=[-1,124563257812,233245568899,123435323422];
   final government = [
     "Long press to select Government",
     "Central Government",

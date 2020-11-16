@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'global.dart' as g;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_swiper/flutter_swiper.dart';
 class FullFeed extends StatefulWidget {
   FullFeed({Key key, this.data}) : super(key: key);
 
@@ -17,7 +17,7 @@ class _FullFeedState extends State<FullFeed> {
   _FullFeedState({this.data});
   bool _alertopen = false, tick = false;
   String url = g.preurl + "gProofs/";
-  List dat;
+  List dat=[];
 
   Future<String> getproof() async {
     final response = await http.post(url, body: {"grievance_id": data[0]});
@@ -45,7 +45,8 @@ class _FullFeedState extends State<FullFeed> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Stack(
+      body: 
+      new Stack(
         children: [
           AbsorbPointer(
             absorbing: _alertopen,
@@ -69,8 +70,7 @@ class _FullFeedState extends State<FullFeed> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      new Expanded(
-                        child: new Column(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -180,7 +180,19 @@ class _FullFeedState extends State<FullFeed> {
                                 ),
                               ),
                             ),
-                            new Container(
+                            if(dat.isNotEmpty)Container(
+                              height: 200,
+                              width: double.infinity,
+                              child:new Swiper(
+                                itemBuilder: (BuildContext context,int index){
+                                  return new Image.network(dat[index]["proofs"],fit: BoxFit.fill,filterQuality: FilterQuality.low,);
+                                },
+                                itemCount: dat.length,
+                                pagination: new SwiperPagination(),
+                                control: new SwiperControl(),
+                              ),
+                            ),
+                            /*new Container(
                               height: MediaQuery.of(context).size.height * 0.4,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
@@ -209,10 +221,9 @@ class _FullFeedState extends State<FullFeed> {
                                       ],
                                     ));
                                   }),
-                            ),
+                            ),*/
                           ],
                         ),
-                      ),
                     ],
                   ),
                 ),
