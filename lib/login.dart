@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
     {
       print({'first_name': firstname,'last_name':lastname,'date_of_birth':dob,'gender':gender,'salary_pa':salary,'job':job,'door_no':aDoorno,'street':aStreet,'zip_code':zipcode,'email_id':email,'password':password,'aadhaar_number':ano,'department_id':null,'city':aCity,'state':aState});
       url = g.preurl+"pSignup/";
-      response = await http.post(url, body: {'first_name': firstname,'last_name':lastname,'date_of_birth':dob,'gender':gender,'salary_pa':salary,'job':job,'door_no':aDoorno,'street':aStreet,'zip_code':zipcode,'email_id':email,'password':password,'aadhaar_number':ano,'department_id':'','city':aCity,'state':aState});
+      response = await http.post(url, body: {'first_name': firstname,'last_name':lastname,'date_of_birth':dob,'gender':gender,'mobile_number':number,'salary_pa':salary,'job':job,'door_no':aDoorno,'street':aStreet,'zip_code':zipcode,'email_id':email,'password':password,'aadhaar_number':ano,'department_id':'','city':aCity,'state':aState});
       data=json.decode(response.body);
       print(data);
       setState(() {

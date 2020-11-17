@@ -354,6 +354,11 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 if (g.loc_alert == 0)
+                  (_isLoading)?Container(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(),
+                  ):
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
